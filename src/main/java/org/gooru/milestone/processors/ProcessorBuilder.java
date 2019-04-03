@@ -5,6 +5,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import org.gooru.milestone.processors.milestonequeuer.MilestoneQueueProcessor;
+import org.gooru.milestone.processors.milestonestatuschecker.MilestoneStatusCheckerProcessor;
 import org.gooru.milestone.responses.MessageResponse;
 
 /**
@@ -28,8 +29,7 @@ public final class ProcessorBuilder {
 
   public static AsyncMessageProcessor buildMilestoneStatusCheckProcessor(
       Vertx vertx, Message<JsonObject> message) {
-    // TODO: Implement this
-    return null;
+    return new MilestoneStatusCheckerProcessor(vertx, message);
   }
 
 }

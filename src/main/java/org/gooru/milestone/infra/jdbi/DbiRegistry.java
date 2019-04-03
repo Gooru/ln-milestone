@@ -31,7 +31,7 @@ public class DbiRegistry {
     return dsdbDbi;
   }
 
-  static DbiRegistry build() {
+  public static DbiRegistry build() {
     return new DbiRegistry(DBICreator.getDbiForDefaultDS(), DBICreator.getDbiForAnalyticsDS(),
         DBICreator.getDbiForDsdbDS());
   }
