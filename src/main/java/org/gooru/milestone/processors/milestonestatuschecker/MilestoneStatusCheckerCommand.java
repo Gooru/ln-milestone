@@ -1,10 +1,7 @@
 package org.gooru.milestone.processors.milestonestatuschecker;
 
 import io.vertx.core.json.JsonArray;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import io.vertx.core.json.JsonObject;
 import java.util.UUID;
 import org.gooru.milestone.infra.data.EventBusMessage;
 import org.gooru.milestone.infra.utils.UuidUtils;
@@ -15,70 +12,62 @@ import org.gooru.milestone.infra.utils.UuidUtils;
 
 class MilestoneStatusCheckerCommand {
 
-  private final UUID classId;
-  private final List<String> usersList;
+  private final UUID courseId;
+  private final String fwCode;
 
-  public UUID getTeacherId() {
-    return teacherId;
+  private MilestoneStatusCheckerCommand(UUID courseId, String fwCode) {
+    this.courseId = courseId;
+    this.fwCode = fwCode;
   }
 
-  private final UUID teacherId;
-
-  private MilestoneStatusCheckerCommand(UUID classId, List<String> usersList,
-      UUID teacherId) {
-    this.classId = classId;
-    this.usersList = Collections.unmodifiableList(usersList);
-    this.teacherId = teacherId;
+  public UUID getCourseId() {
+    return courseId;
   }
 
-  public UUID getClassId() {
-    return classId;
-  }
-
-  List<String> getUsersList() {
-    return usersList;
+  public String getFwCode() {
+    return fwCode;
   }
 
   static MilestoneStatusCheckerCommand build(EventBusMessage eventBusMessage) {
-    JsonArray users = eventBusMessage.getRequestBody().getJsonArray(RequestAttributes.USERS);
-    if (users == null || users.isEmpty()) {
-      throw new IllegalArgumentException("Invalid users list");
+    JsonObject request = eventBusMessage.getRequestBody();
+    String fwCodeInRequest = getFirstMemberOfStringArrayWithMandatoryValidationFromJson(
+        request, RequestAttributes.FW_CODE);
+
+    String courseIdString = getFirstMemberOfStringArrayWithMandatoryValidationFromJson(request,
+        RequestAttributes.COURSE_ID);
+
+    if (!UuidUtils.validateUuid(courseIdString)) {
+      throw new IllegalArgumentException("Invalid course id");
     }
-    List<String> usersList = validateForBeingUuidAndFetchUsers(users);
-    String classIdString = eventBusMessage.getRequestBody().getString(RequestAttributes.CLASS_ID);
-    if (!UuidUtils.validateUuid(classIdString)) {
-      throw new IllegalArgumentException("Invalid class id");
-    }
-    if (!UuidUtils.validateUuid(Objects.toString(eventBusMessage.getUserId()))) {
-      throw new IllegalArgumentException("Invalid teacher id");
-    }
-    return new MilestoneStatusCheckerCommand(UUID.fromString(classIdString),
-        usersList, eventBusMessage.getUserId());
+
+    return new MilestoneStatusCheckerCommand(UUID.fromString(courseIdString), fwCodeInRequest);
   }
 
-  private static List<String> validateForBeingUuidAndFetchUsers(JsonArray users) {
-    int size = users.size();
-    List<String> usersList = new ArrayList<>(size);
-    for (int i = 0; i < size; i++) {
-      String user = users.getString(i);
-      if (!UuidUtils.validateUuid(user)) {
-        throw new IllegalArgumentException("Invalid format for one of the users");
-      }
-      usersList.add(user);
+  private static String getFirstMemberOfStringArrayWithMandatoryValidationFromJson(JsonObject json,
+      String arrayKey) {
+    JsonArray valuesArray = json.getJsonArray(arrayKey);
+    if (valuesArray == null || valuesArray.isEmpty()) {
+      throw new IllegalArgumentException("Invalid " + arrayKey);
     }
-    return usersList;
+    String stringValue = valuesArray.getString(0);
+    if (stringValue == null || stringValue.isEmpty()) {
+      throw new IllegalArgumentException("Null/Empty " + arrayKey);
+    }
+    return stringValue;
   }
 
   @Override
   public String toString() {
-    return "MilestoneQueueCommand{" +
-        "classId=" + classId + ", usersList=" + usersList + ", teacherId=" + teacherId + '}';
+    return "MilestoneStatusCheckerCommand{" +
+        "courseId=" + courseId +
+        ", fwCode='" + fwCode + '\'' +
+        '}';
   }
 
   private static class RequestAttributes {
 
-    private static final String USERS = "users";
-    private static final String CLASS_ID = "classId";
+    private static final String FW_CODE = "fwCode";
+    private static final String COURSE_ID = "courseId";
 
 
     private RequestAttributes() {

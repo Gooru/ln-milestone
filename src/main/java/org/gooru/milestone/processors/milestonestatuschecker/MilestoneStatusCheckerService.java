@@ -1,8 +1,5 @@
 package org.gooru.milestone.processors.milestonestatuschecker;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import org.gooru.milestone.infra.jdbi.DbiRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +12,7 @@ class MilestoneStatusCheckerService {
 
   private final DbiRegistry dbiRegistry;
   private MilestoneStatusCheckerCommand command;
-  private static final Logger LOGGER = LoggerFactory
-      .getLogger(MilestoneStatusCheckerService.class);
-  private MilestoneStatusCheckerDao milestoneQueueDao;
-  private List<UUID> members;
-  private Set<String> usersSet;
+  private static final Logger LOGGER = LoggerFactory.getLogger(MilestoneStatusCheckerService.class);
 
   MilestoneStatusCheckerService(DbiRegistry dbiRegistry) {
     this.dbiRegistry = dbiRegistry;
@@ -27,6 +20,7 @@ class MilestoneStatusCheckerService {
 
 
   boolean checkStatusForMilestoneDone(MilestoneStatusCheckerCommand command) {
+    LOGGER.debug(command.toString());
     return false;
   }
 }
