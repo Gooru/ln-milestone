@@ -9,13 +9,13 @@ import org.skife.jdbi.v2.DBI;
 public class DbiRegistry {
 
   private final DBI nucleusDbi;
-  private final DBI analyitcsDbi;
+  private final DBI analyticsDbi;
   private final DBI dsdbDbi;
 
 
-  private DbiRegistry(DBI nucleusDbi, DBI analyitcsDbi, DBI dsdbDbi) {
+  private DbiRegistry(DBI nucleusDbi, DBI analyticsDbi, DBI dsdbDbi) {
     this.nucleusDbi = nucleusDbi;
-    this.analyitcsDbi = analyitcsDbi;
+    this.analyticsDbi = analyticsDbi;
     this.dsdbDbi = dsdbDbi;
   }
 
@@ -23,8 +23,8 @@ public class DbiRegistry {
     return nucleusDbi;
   }
 
-  public DBI getAnalyitcsDbi() {
-    return analyitcsDbi;
+  public DBI getAnalyticsDbi() {
+    return analyticsDbi;
   }
 
   public DBI getDsdbDbi() {
