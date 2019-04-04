@@ -13,13 +13,15 @@ class ProcessingEligibilityVerifierImpl implements
     ProcessingEligibilityVerifier {
 
   private final DBI dbi4core;
+  private final boolean override;
   private static final Logger LOGGER = LoggerFactory
       .getLogger(ProcessingEligibilityVerifierImpl.class);
   private MilestoneQueueModel model;
   private ProcessingEligibilityVerifierDao dao4core;
 
-  ProcessingEligibilityVerifierImpl(DBI dbi4core) {
+  ProcessingEligibilityVerifierImpl(DBI dbi4core, boolean override) {
     this.dbi4core = dbi4core;
+    this.override = override;
   }
 
   @Override
@@ -29,7 +31,7 @@ class ProcessingEligibilityVerifierImpl implements
       LOGGER.debug("Record is not found to be in dispatched state, may be processed already.");
       return false;
     }
-    if (wasILPAlreadyDone()) {
+    if (!override && wasMilestoneCreationAlreadyDone()) {
       LOGGER.debug("ILP was already done");
       return false;
     }
@@ -38,8 +40,8 @@ class ProcessingEligibilityVerifierImpl implements
   }
 
 
-  private boolean wasILPAlreadyDone() {
-    return fetchCoreDao().ilpAlreadyDoneForUser(model);
+  private boolean wasMilestoneCreationAlreadyDone() {
+    return fetchCoreDao().wasMilestoneCreationAlreadyDone(model);
   }
 
   private boolean recordIsStillInDispatchedState() {

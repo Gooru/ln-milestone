@@ -12,9 +12,8 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 interface ProcessingEligibilityVerifierDao {
 
   @SqlQuery(
-      "select exists (select 1 from class_member where user_id = :userId and "
-          + " class_id = :classId and initial_lp_done = true)")
-  boolean ilpAlreadyDoneForUser(@BindBean MilestoneQueueModel model);
+      "select exists (select 1 from milestone_lesson_map where course_id = :courseId and fw_code = :fwCode limit 1)")
+  boolean wasMilestoneCreationAlreadyDone(@BindBean MilestoneQueueModel model);
 
   @SqlQuery("select exists (select 1 from milestone_queue where id = :id and status = 1)")
   boolean isQueuedRecordStillDispatched(@Bind("id") Long id);

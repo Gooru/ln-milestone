@@ -13,11 +13,11 @@ public interface ProcessingEligibilityVerifier {
   boolean isEligibleForProcessing(MilestoneQueueModel model);
 
   static ProcessingEligibilityVerifier build() {
-    return new ProcessingEligibilityVerifierImpl(DBICreator.getDbiForDefaultDS());
+    return new ProcessingEligibilityVerifierImpl(DBICreator.getDbiForDefaultDS(), false);
   }
 
-  static ProcessingEligibilityVerifier build(DBI dbi4core) {
-    return new ProcessingEligibilityVerifierImpl(dbi4core);
+  static ProcessingEligibilityVerifier build(DBI dbi4core, boolean override) {
+    return new ProcessingEligibilityVerifierImpl(dbi4core, override);
   }
 
 }

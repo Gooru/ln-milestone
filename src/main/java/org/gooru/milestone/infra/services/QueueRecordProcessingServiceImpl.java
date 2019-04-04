@@ -2,11 +2,11 @@ package org.gooru.milestone.infra.services;
 
 import org.gooru.milestone.infra.data.MilestoneQueueModel;
 import org.gooru.milestone.infra.data.ProcessingContext;
+import org.gooru.milestone.infra.jdbi.DbiRegistry;
 import org.gooru.milestone.infra.services.queueoperators.ProcessingEligibilityVerifier;
 import org.gooru.milestone.infra.services.queueoperators.RequestDequeuer;
 import org.gooru.milestone.infra.services.subjectinferer.SubjectInferer;
 import org.gooru.milestone.infra.services.validators.ContextValidator;
-import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,22 +23,20 @@ import org.slf4j.LoggerFactory;
 
 class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
 
-  private final DBI dbi4core;
-  private final DBI dbi4ds;
+  private final DbiRegistry dbiRegistry;
   private MilestoneQueueModel model;
   private static final Logger LOGGER = LoggerFactory
       .getLogger(QueueRecordProcessingServiceImpl.class);
   private ProcessingContext context;
 
-  QueueRecordProcessingServiceImpl(DBI dbi4core, DBI dbi4ds) {
-    this.dbi4core = dbi4core;
-    this.dbi4ds = dbi4ds;
+  QueueRecordProcessingServiceImpl(DbiRegistry dbiRegistry) {
+    this.dbiRegistry = dbiRegistry;
   }
 
   @Override
   public void processQueueRecord(MilestoneQueueModel model) {
     this.model = model;
-    if (!ProcessingEligibilityVerifier.build(dbi4core)
+    if (!ProcessingEligibilityVerifier.build(dbiRegistry.getNucleusDbi(), model.getOverride())
         .isEligibleForProcessing(model)) {
       LOGGER.debug("Record is not found to be in dispatched state, may be processed already.");
       dequeueRecord();
@@ -49,7 +47,7 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
 
   private void dequeueRecord() {
     LOGGER.debug("Dequeueing record");
-    RequestDequeuer.build(dbi4core).dequeue(model);
+    RequestDequeuer.build(dbiRegistry.getNucleusDbi()).dequeue(model);
   }
 
   private void processRecord() {
@@ -76,8 +74,13 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
 
 
   private void preprocess() {
-    validate();
     initialize();
+    validate();
+    handleOverride();
+  }
+
+  private void handleOverride() {
+    // TODO : Implement this
   }
 
   private void doPostProcessing() {
@@ -85,7 +88,7 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   }
 
   private void validate() {
-    ContextValidator.build(dbi4core, dbi4ds).validate(context);
+    ContextValidator.build(dbiRegistry).validate(context);
   }
 
   private void initialize() {
@@ -93,7 +96,8 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   }
 
   private void initializeSubject() {
-    String subject = SubjectInferer.build(dbi4core).inferSubjectForCourse(context.getCourseId());
+    String subject = SubjectInferer.build(dbiRegistry.getNucleusDbi())
+        .inferSubjectForCourse(context.getCourseId());
     context.setSubject(subject);
   }
 
