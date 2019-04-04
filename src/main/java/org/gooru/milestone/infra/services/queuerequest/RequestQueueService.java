@@ -4,8 +4,9 @@ import org.gooru.milestone.infra.data.MilestoneQueueModel;
 import org.gooru.milestone.infra.jdbi.DbiRegistry;
 
 /**
- * Module to queue the request for milestone view for classes setup to force calculate which are associated with
- * premium course. The specified validations are not enforced in this module, it is left to caller
+ * Module to queue the request for milestone view for classes setup to force calculate which are
+ * associated with premium course. The specified validations are not enforced in this module, it is
+ * left to caller
  *
  * @author ashish
  */

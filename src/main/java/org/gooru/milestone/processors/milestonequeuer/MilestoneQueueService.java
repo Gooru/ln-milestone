@@ -62,9 +62,9 @@ class MilestoneQueueService {
       milestoneDsDbQueueDao = dbiRegistry.getDsdbDbi().onDemand(MilestoneQueueDao.class);
     }
     return milestoneDsDbQueueDao;
-    
+
   }
-  
+
   private MilestoneQueueDao fetchNucleusDao() {
     if (milestoneNucleusQueueDao == null) {
       milestoneNucleusQueueDao = dbiRegistry.getNucleusDbi().onDemand(MilestoneQueueDao.class);
