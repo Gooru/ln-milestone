@@ -1,10 +1,6 @@
 package org.gooru.milestone.processors.milestonequeuer;
 
-import io.vertx.core.json.JsonArray;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import io.vertx.core.json.JsonObject;
 import java.util.UUID;
 import org.gooru.milestone.infra.data.EventBusMessage;
 import org.gooru.milestone.infra.utils.UuidUtils;
@@ -15,70 +11,64 @@ import org.gooru.milestone.infra.utils.UuidUtils;
 
 class MilestoneQueueCommand {
 
-  private final UUID classId;
-  private final List<String> usersList;
+  private final UUID courseId;
+  private final String fwCode;
+  private final boolean override;
 
-  public UUID getTeacherId() {
-    return teacherId;
+  private MilestoneQueueCommand(UUID courseId, String fwCode, boolean override) {
+    this.courseId = courseId;
+    this.fwCode = fwCode;
+    this.override = override;
   }
 
-  private final UUID teacherId;
-
-  private MilestoneQueueCommand(UUID classId, List<String> usersList,
-      UUID teacherId) {
-    this.classId = classId;
-    this.usersList = Collections.unmodifiableList(usersList);
-    this.teacherId = teacherId;
+  UUID getCourseId() {
+    return courseId;
   }
 
-  public UUID getClassId() {
-    return classId;
+  String getFwCode() {
+    return fwCode;
   }
 
-  List<String> getUsersList() {
-    return usersList;
+  boolean isOverride() {
+    return override;
   }
 
   static MilestoneQueueCommand build(EventBusMessage eventBusMessage) {
-    JsonArray users = eventBusMessage.getRequestBody().getJsonArray(RequestAttributes.USERS);
-    if (users == null || users.isEmpty()) {
-      throw new IllegalArgumentException("Invalid users list");
+    JsonObject request = eventBusMessage.getRequestBody();
+    String fwCodeInRequest = request.getString(MilestoneQueueCommand.RequestAttributes.FW_CODE);
+    if (fwCodeInRequest == null || fwCodeInRequest.isEmpty()) {
+      throw new IllegalArgumentException("Invalid FW code");
     }
-    List<String> usersList = validateForBeingUuidAndFetchUsers(users);
-    String classIdString = eventBusMessage.getRequestBody().getString(RequestAttributes.CLASS_ID);
-    if (!UuidUtils.validateUuid(classIdString)) {
-      throw new IllegalArgumentException("Invalid class id");
+
+    String courseIdString = request.getString(MilestoneQueueCommand.RequestAttributes.COURSE_ID);
+    if (!UuidUtils.validateUuid(courseIdString)) {
+      throw new IllegalArgumentException("Invalid course id");
     }
-    if (!UuidUtils.validateUuid(Objects.toString(eventBusMessage.getUserId()))) {
-      throw new IllegalArgumentException("Invalid teacher id");
+
+    if (!request.containsKey(RequestAttributes.OVERRIDE)) {
+      throw new IllegalArgumentException("Invalid override flag");
     }
-    return new MilestoneQueueCommand(UUID.fromString(classIdString),
-        usersList, eventBusMessage.getUserId());
+
+    boolean override = request.getBoolean(RequestAttributes.OVERRIDE);
+
+    return new MilestoneQueueCommand(UUID.fromString(courseIdString), fwCodeInRequest, override);
   }
 
-  private static List<String> validateForBeingUuidAndFetchUsers(JsonArray users) {
-    int size = users.size();
-    List<String> usersList = new ArrayList<>(size);
-    for (int i = 0; i < size; i++) {
-      String user = users.getString(i);
-      if (!UuidUtils.validateUuid(user)) {
-        throw new IllegalArgumentException("Invalid format for one of the users");
-      }
-      usersList.add(user);
-    }
-    return usersList;
-  }
 
   @Override
   public String toString() {
     return "MilestoneQueueCommand{" +
-        "classId=" + classId + ", usersList=" + usersList + ", teacherId=" + teacherId + '}';
+        "courseId=" + courseId +
+        ", fwCode='" + fwCode + '\'' +
+        ", override=" + override +
+        '}';
   }
 
   private static class RequestAttributes {
 
-    private static final String USERS = "users";
-    private static final String CLASS_ID = "classId";
+    private static final String OVERRIDE = "override";
+    private static final String FW_CODE = "fwCode";
+    private static final String COURSE_ID = "courseId";
 
 
     private RequestAttributes() {

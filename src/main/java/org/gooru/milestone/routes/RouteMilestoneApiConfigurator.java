@@ -43,8 +43,7 @@ public class RouteMilestoneApiConfigurator implements RouteConfigurator {
 
   private void doMilestone(RoutingContext routingContext) {
     DeliveryOptions options = DeliveryOptionsBuilder
-        .buildWithoutApiVersion(routingContext, mbusTimeout,
-            Message.MSG_OP_MILESTONE_QUEUE);
+        .buildWithoutApiVersion(routingContext, mbusTimeout, Message.MSG_OP_MILESTONE_QUEUE);
     eb.<JsonObject>send(Constants.EventBus.MBEP_API_DISPATCHER,
         RouteRequestUtility.getBodyForMessage(routingContext),
         options, reply -> RouteResponseUtility.responseHandler(routingContext, reply, LOGGER));

@@ -6,7 +6,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import org.gooru.milestone.infra.data.EventBusMessage;
 import org.gooru.milestone.infra.exceptions.ExceptionResolver;
-import org.gooru.milestone.infra.jdbi.DBICreator;
+import org.gooru.milestone.infra.jdbi.DbiRegistry;
 import org.gooru.milestone.processors.AsyncMessageProcessor;
 import org.gooru.milestone.responses.MessageResponse;
 import org.gooru.milestone.responses.MessageResponseFactory;
@@ -26,9 +26,8 @@ public class MilestoneQueueProcessor implements AsyncMessageProcessor {
   private static final Logger LOGGER = LoggerFactory
       .getLogger(MilestoneQueueProcessor.class);
   private EventBusMessage eventBusMessage;
-  private final MilestoneQueueProcessorService service = new MilestoneQueueProcessorService(
-      DBICreator.getDbiForDefaultDS(), DBICreator.getDbiForDsdbDS()
-  );
+  private final MilestoneQueueService service = new MilestoneQueueService(
+      DbiRegistry.build());
 
   public MilestoneQueueProcessor(Vertx vertx, Message<JsonObject> message) {
     this.vertx = vertx;
@@ -43,7 +42,7 @@ public class MilestoneQueueProcessor implements AsyncMessageProcessor {
         this.eventBusMessage = EventBusMessage.eventBusMessageBuilder(message);
         MilestoneQueueCommand command = MilestoneQueueCommand
             .build(eventBusMessage);
-        service.calculateInitialSkyline(command);
+        service.enqueue(command);
         future.complete(MessageResponseFactory.createOkayResponse(new JsonObject()));
       } catch (Throwable throwable) {
         LOGGER.warn("Encountered exception", throwable);
