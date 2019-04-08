@@ -3,6 +3,7 @@ package org.gooru.milestone.infra.services;
 import org.gooru.milestone.infra.data.MilestoneQueueModel;
 import org.gooru.milestone.infra.data.ProcessingContext;
 import org.gooru.milestone.infra.jdbi.DbiRegistry;
+import org.gooru.milestone.infra.services.milestonecleaner.MilestoneCleaner;
 import org.gooru.milestone.infra.services.queueoperators.ProcessingEligibilityVerifier;
 import org.gooru.milestone.infra.services.queueoperators.RequestDequeuer;
 import org.gooru.milestone.infra.services.subjectinferer.SubjectInferer;
@@ -80,7 +81,9 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   }
 
   private void handleOverride() {
-    // TODO : Implement this
+    if (model.getOverride()) {
+      MilestoneCleaner.build(dbiRegistry).cleanupMilestones(model.getCourseId(), model.getFwCode());
+    }
   }
 
   private void doPostProcessing() {

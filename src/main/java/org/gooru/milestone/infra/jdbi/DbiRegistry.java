@@ -36,4 +36,8 @@ public class DbiRegistry {
         DBICreator.getDbiForDsdbDS());
   }
 
+  public static DbiRegistry build(DBI nucleusDbi, DBI analyticsDbi, DBI dsdbDbi) {
+    return new DbiRegistry(nucleusDbi, analyticsDbi, dsdbDbi);
+  }
+
 }
