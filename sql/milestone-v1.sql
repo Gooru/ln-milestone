@@ -26,6 +26,7 @@ COMMENT on COLUMN milestone_queue.status IS '0 means queued, 1 means dispatched 
 -- This table will be created in nucleus
 CREATE TABLE milestone_lesson_map (
   id bigserial NOT NULL PRIMARY KEY,
+  milestone_id text NOT NULL,
   course_id uuid NOT NULL,
   unit_id uuid NOT NULL,
   lesson_id uuid NOT NULL,
@@ -43,6 +44,9 @@ CREATE TABLE milestone_lesson_map (
 );
 
 CREATE INDEX mlp_cf_idx ON milestone_lesson_map USING btree (course_id, fw_code);
+CREATE INDEX mlp_id_idx ON milestone_lesson_map USING btree (milestone_id);
+ALTER TABLE milestone_lesson_map ADD CONSTRAINT mlp_icd UNIQUE(course_id, fw_code, milestone_id);
+
 
 COMMENT on TABLE milestone_lesson_map IS 'Mapping of milestones to lesson in a specific course for a specified framework. All the tx_* fields are GUT specific ones and not FW specific things';
 
@@ -50,6 +54,7 @@ COMMENT on TABLE milestone_lesson_map IS 'Mapping of milestones to lesson in a s
 -- This table will be created in analytics db. The key is not bigserial as key has to match with what is there in nucleus db
 CREATE TABLE milestone (
   id bigint NOT NULL PRIMARY KEY,
+  milestone_id text NOT NULL,
   course_id uuid NOT NULL,
   unit_id uuid NOT NULL,
   lesson_id uuid NOT NULL,
