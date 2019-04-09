@@ -1,6 +1,6 @@
 package org.gooru.milestone.infra.services.milestonepersister;
 
-import org.gooru.milestone.infra.services.algebra.competency.CompetencyLine;
+import org.gooru.milestone.infra.data.MilestoneLessonMapModel;
 
 /**
  * @author ashish.
@@ -8,6 +8,6 @@ import org.gooru.milestone.infra.services.algebra.competency.CompetencyLine;
 
 public interface MilestonePersister {
 
-  void persistMilestone(CompetencyLine skyline);
+  void persistMilestone(MilestoneLessonMapModel model);
 
 }
