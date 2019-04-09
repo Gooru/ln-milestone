@@ -36,10 +36,12 @@ CREATE TABLE milestone_lesson_map (
   fw_code text NOT NULL,
   tx_subject_code text NOT NULL,
   tx_domain_id bigint NOT NULL,
+  tx_domain_seq integer NOT NULL,
   tx_domain_code text NOT NULL,
   tx_comp_code text NOT NULL,
   tx_comp_name text NOT NULL,
   tx_comp_student_desc text,
+  tx_comp_seq integer NOT NULL,
   updated_at timestamp without time zone  DEFAULT timezone('UTC'::text, now()) NOT NULL
 );
 
@@ -73,9 +75,12 @@ CREATE TABLE grade_competency_map (
  grade_id integer NOT NULL,
  tx_subject_code text NOT NULL,
  fw_code text NOT NULL,
+ tx_domain_id bigint NOT NULL,
  tx_domain_code text NOT NULL,
  tx_domain_seq integer NOT NULL,
  tx_comp_code text NOT NULL,
+ tx_comp_name text NOT NULL,
+ tx_comp_student_desc text,
  tx_comp_seq integer NOT NULL
 );
 
@@ -85,4 +90,6 @@ CREATE INDEX gcm_g_idx ON grade_competency_map USING btree (grade_id);
 ALTER TABLE grade_competency_map ADD CONSTRAINT gcm_fk_dcm_sdc FOREIGN KEY (tx_subject_code, tx_domain_code, tx_comp_code) REFERENCES domain_competency_matrix(tx_subject_code, tx_domain_code, tx_comp_code);
 ALTER TABLE grade_competency_map ADD CONSTRAINT gcm_fk_gm_gsfw FOREIGN KEY (grade_id, tx_subject_code, fw_code) REFERENCES grade_master(id, tx_subject_code, fw_code);
 
-COMMENT on TABLE grade_competency_map IS 'This table represents a data structure to store grade competency map which is hydrated view of grade_competency_bounds. It includes competencies in specific grade and not till that grade.'
+COMMENT on TABLE grade_competency_map IS 'This table represents a data structure to store grade competency map which is hydrated view of grade_competency_bounds. It includes competencies in specific grade and not till that grade.';
+
+
