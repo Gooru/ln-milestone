@@ -1,8 +1,11 @@
 package org.gooru.milestone.infra.services;
 
+import java.util.List;
+import org.gooru.milestone.infra.data.CulModel;
 import org.gooru.milestone.infra.data.MilestoneQueueModel;
 import org.gooru.milestone.infra.data.ProcessingContext;
 import org.gooru.milestone.infra.jdbi.DbiRegistry;
+import org.gooru.milestone.infra.services.contentinitializer.CulModelsInitializer;
 import org.gooru.milestone.infra.services.milestonecleaner.MilestoneCleaner;
 import org.gooru.milestone.infra.services.queueoperators.ProcessingEligibilityVerifier;
 import org.gooru.milestone.infra.services.queueoperators.RequestDequeuer;
@@ -29,6 +32,7 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   private static final Logger LOGGER = LoggerFactory
       .getLogger(QueueRecordProcessingServiceImpl.class);
   private ProcessingContext context;
+  private List<CulModel> culModels;
 
   QueueRecordProcessingServiceImpl(DbiRegistry dbiRegistry) {
     this.dbiRegistry = dbiRegistry;
@@ -70,7 +74,37 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   }
 
   private void process() {
+    initializeCulModels();
+    initializeGCM();
+    initializeGrades();
+    createMilestones();
+    persistMilestones();
     // TODO : Implement this
+  }
+
+  private void persistMilestones() {
+    // TODO : Implement this
+
+  }
+
+  private void createMilestones() {
+    // TODO : Implement this
+
+  }
+
+  private void initializeGrades() {
+    // TODO : Implement this
+
+  }
+
+  private void initializeGCM() {
+    // TODO : Implement this
+
+  }
+
+  private void initializeCulModels() {
+    culModels = CulModelsInitializer.build(dbiRegistry)
+        .initializeCulModelsForCourse(context.getCourseId());
   }
 
 
