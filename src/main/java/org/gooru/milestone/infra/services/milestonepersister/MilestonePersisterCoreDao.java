@@ -26,8 +26,9 @@ interface MilestonePersisterCoreDao {
   void persistMilestones(@BindBean List<MilestoneLessonMapModel> models);
 
   @Mapper(MilestoneAnalyticsModelMapper.class)
-  @SqlQuery("select id, milestone_id, course_id, unit_id, lesson_id, fw_code from milestone "
-      + " where course_id = :courseId and fw_code = :fwCode")
+  @SqlQuery(
+      "select id, milestone_id, course_id, unit_id, lesson_id, fw_code from milestone_lesson_map "
+          + " where course_id = :courseId and fw_code = :fwCode")
   List<MilestoneAnalyticsModel> fetchAnalyticsModelsFromCore(@Bind("courseId") UUID courseId,
       @Bind("fwCode") String fwCode);
 }

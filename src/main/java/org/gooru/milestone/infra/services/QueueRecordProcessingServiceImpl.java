@@ -2,11 +2,20 @@ package org.gooru.milestone.infra.services;
 
 import java.util.List;
 import org.gooru.milestone.infra.data.CulModel;
+import org.gooru.milestone.infra.data.GradeCompetencyMapModel;
+import org.gooru.milestone.infra.data.GradeModel;
+import org.gooru.milestone.infra.data.MilestoneLessonMapModel;
 import org.gooru.milestone.infra.data.MilestoneQueueModel;
 import org.gooru.milestone.infra.data.ProcessingContext;
 import org.gooru.milestone.infra.jdbi.DbiRegistry;
+import org.gooru.milestone.infra.services.calculator.MilestoneCalculator;
 import org.gooru.milestone.infra.services.contentinitializer.CulModelsInitializer;
+import org.gooru.milestone.infra.services.gcminitializer.GcmInitializer;
+import org.gooru.milestone.infra.services.gradeinitializer.GradeInitializer;
+import org.gooru.milestone.infra.services.lookups.GcmLookup;
+import org.gooru.milestone.infra.services.lookups.GradeLookup;
 import org.gooru.milestone.infra.services.milestonecleaner.MilestoneCleaner;
+import org.gooru.milestone.infra.services.milestonepersister.MilestonePersister;
 import org.gooru.milestone.infra.services.queueoperators.ProcessingEligibilityVerifier;
 import org.gooru.milestone.infra.services.queueoperators.RequestDequeuer;
 import org.gooru.milestone.infra.services.subjectinferer.SubjectInferer;
@@ -33,6 +42,11 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
       .getLogger(QueueRecordProcessingServiceImpl.class);
   private ProcessingContext context;
   private List<CulModel> culModels;
+  private List<GradeModel> gradeModels;
+  private List<GradeCompetencyMapModel> gradeCompetencyMapModels;
+  private GcmLookup gcmLookup;
+  private GradeLookup gradeLookup;
+  private List<MilestoneLessonMapModel> milestones;
 
   QueueRecordProcessingServiceImpl(DbiRegistry dbiRegistry) {
     this.dbiRegistry = dbiRegistry;
@@ -77,28 +91,35 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
     initializeCulModels();
     initializeGCM();
     initializeGrades();
+    initializeLookups();
     createMilestones();
     persistMilestones();
-    // TODO : Implement this
   }
 
   private void persistMilestones() {
-    // TODO : Implement this
-
+    MilestonePersister.build(dbiRegistry, context.getCourseId(), context.getFwCode())
+        .persistMilestones(milestones);
   }
 
   private void createMilestones() {
-    // TODO : Implement this
+    milestones = MilestoneCalculator.build(context, gradeLookup, gcmLookup)
+        .calculateMilestones(culModels);
+  }
 
+  private void initializeLookups() {
+    gcmLookup = GcmLookup.build(gradeCompetencyMapModels);
+    gradeLookup = GradeLookup.build(gradeModels);
   }
 
   private void initializeGrades() {
-    // TODO : Implement this
+    gradeModels = GradeInitializer.build(dbiRegistry)
+        .initializeGrades(context.getSubject(), context.getFwCode());
 
   }
 
   private void initializeGCM() {
-    // TODO : Implement this
+    gradeCompetencyMapModels = GcmInitializer.build(dbiRegistry)
+        .initializeGcmModels(context.getSubject(), context.getFwCode());
 
   }
 

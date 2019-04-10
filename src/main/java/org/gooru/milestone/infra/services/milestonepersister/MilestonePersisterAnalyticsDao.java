@@ -16,7 +16,7 @@ interface MilestonePersisterAnalyticsDao {
 
   @SqlBatch(
       "insert into milestone (id, milestone_id, course_id, unit_id, lesson_id, fw_code) values "
-          + " (:id, :courseId, :unitId, :lessonId, :fwCode)")
+          + " (:id, :milestoneId, :courseId, :unitId, :lessonId, :fwCode)")
   void persistMilestonesInAnalytics(@BindBean List<MilestoneAnalyticsModel> models);
 
   @SqlUpdate("delete from milestone where course_id = :courseId and fw_code = :fwCode")

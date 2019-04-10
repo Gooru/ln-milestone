@@ -7,7 +7,7 @@ package org.gooru.milestone.infra.data;
 public class GradeCompetencyMapModel {
 
   private Long id;
-  private int gradeId;
+  private Long gradeId;
   private String subjectCode;
   private String fwCode;
   private Long domainId;
@@ -26,11 +26,11 @@ public class GradeCompetencyMapModel {
     this.id = id;
   }
 
-  public int getGradeId() {
+  public Long getGradeId() {
     return gradeId;
   }
 
-  public void setGradeId(int gradeId) {
+  public void setGradeId(Long gradeId) {
     this.gradeId = gradeId;
   }
 

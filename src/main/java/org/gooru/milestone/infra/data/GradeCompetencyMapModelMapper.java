@@ -25,11 +25,12 @@ public class GradeCompetencyMapModelMapper implements ResultSetMapper<GradeCompe
 
 
   @Override
-  public GradeCompetencyMapModel map(int index, ResultSet r, StatementContext ctx) throws SQLException {
+  public GradeCompetencyMapModel map(int index, ResultSet r, StatementContext ctx)
+      throws SQLException {
     GradeCompetencyMapModel model = new GradeCompetencyMapModel();
 
     model.setId(r.getLong(ID));
-    model.setGradeId(r.getInt(GRADE_ID));
+    model.setGradeId(r.getLong(GRADE_ID));
     model.setSubjectCode(r.getString(TX_SUBJECT_CODE));
     model.setFwCode(r.getString(FW_CODE));
     model.setDomainId(r.getLong(TX_DOMAIN_ID));

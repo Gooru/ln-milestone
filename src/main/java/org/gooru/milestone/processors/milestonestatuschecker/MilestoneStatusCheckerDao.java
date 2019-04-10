@@ -1,7 +1,6 @@
 package org.gooru.milestone.processors.milestonestatuschecker;
 
 import java.util.UUID;
-import org.gooru.milestone.infra.jdbi.PGArray;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 

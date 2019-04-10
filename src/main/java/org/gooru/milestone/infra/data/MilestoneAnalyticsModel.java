@@ -7,6 +7,7 @@ import java.util.UUID;
  */
 
 public class MilestoneAnalyticsModel {
+
   private Long id;
   private String milestoneId;
   private UUID courseId;

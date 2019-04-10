@@ -9,6 +9,7 @@ import java.util.UUID;
  */
 
 public class CulModel {
+
   private UUID courseId;
   private UUID unitId;
   private Integer unitSequence;

@@ -17,4 +17,9 @@ public interface MilestonePersister {
     return new MilestonePersisterImpl(dbiRegistry, courseId, fwCode);
   }
 
+  static MilestonePersister build(UUID courseId, String fwCode) {
+    return new MilestonePersisterImpl(DbiRegistry.build(), courseId, fwCode);
+  }
+
+
 }

@@ -47,7 +47,6 @@ CREATE TABLE milestone_lesson_map (
 
 CREATE INDEX mlp_cf_idx ON milestone_lesson_map USING btree (course_id, fw_code);
 CREATE INDEX mlp_id_idx ON milestone_lesson_map USING btree (milestone_id);
-ALTER TABLE milestone_lesson_map ADD CONSTRAINT mlp_icd UNIQUE(course_id, fw_code, milestone_id);
 
 
 COMMENT on TABLE milestone_lesson_map IS 'Mapping of milestones to lesson in a specific course for a specified framework. All the tx_* fields are GUT specific ones and not FW specific things';
@@ -72,7 +71,7 @@ CREATE INDEX ms_cf_idx ON milestone USING btree (course_id, fw_code);
 
 CREATE TABLE grade_competency_map (
  id bigserial NOT NULL PRIMARY KEY,
- grade_id integer NOT NULL,
+ grade_id bigint NOT NULL,
  tx_subject_code text NOT NULL,
  fw_code text NOT NULL,
  tx_domain_id bigint NOT NULL,
