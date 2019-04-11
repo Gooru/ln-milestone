@@ -5,6 +5,8 @@ import java.util.UUID;
 import org.gooru.milestone.infra.data.MilestoneAnalyticsModel;
 import org.gooru.milestone.infra.data.MilestoneLessonMapModel;
 import org.gooru.milestone.infra.jdbi.DbiRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This module is responsible to persist the models list in Core DB and in Analytics DB.
@@ -24,6 +26,7 @@ class MilestonePersisterImpl implements MilestonePersister {
   private List<MilestoneAnalyticsModel> analyticsModels;
   private MilestonePersisterCoreDao coreDao;
   private MilestonePersisterAnalyticsDao analyticsDao;
+  private static final Logger LOGGER = LoggerFactory.getLogger(MilestonePersister.class);
 
   MilestonePersisterImpl(DbiRegistry dbiRegistry, UUID courseId, String fwCode) {
 
@@ -40,6 +43,7 @@ class MilestonePersisterImpl implements MilestonePersister {
   }
 
   private void process() {
+    LOGGER.debug("Processing of persist milestones");
     persistMilestonesInCore();
     initializeMilestoneAnalyticsModelsFromCore();
     cleanupMilestonesFromAnalytics();
@@ -47,18 +51,22 @@ class MilestonePersisterImpl implements MilestonePersister {
   }
 
   private void persistMilestoneInAnalytics() {
+    LOGGER.debug("Persisting milestones in analytics");
     fetchAnalyticsDao().persistMilestonesInAnalytics(analyticsModels);
   }
 
   private void cleanupMilestonesFromAnalytics() {
+    LOGGER.debug("Cleaning up milestones from analytics");
     fetchAnalyticsDao().cleanupExistingMilestoneForCourseAndFw(courseId, fwCode);
   }
 
   private void initializeMilestoneAnalyticsModelsFromCore() {
+    LOGGER.debug("Fetching milestones from core to be updated in analytics");
     analyticsModels = fetchCoreDao().fetchAnalyticsModelsFromCore(courseId, fwCode);
   }
 
   private void persistMilestonesInCore() {
+    LOGGER.debug("Persisting milestones in core");
     fetchCoreDao().persistMilestones(models);
   }
 

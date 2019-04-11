@@ -40,6 +40,7 @@ class MilestoneCalculatorImpl implements MilestoneCalculator {
   @Override
   public List<MilestoneLessonMapModel> calculateMilestones(List<CulModel> culModels) {
     this.culModels = culModels;
+    LOGGER.debug("Calculating milestones");
     if (culModels == null || culModels.isEmpty() || gcmLookup == null || gradeLookup == null
         || context == null || context.getCourseId() == null || context.getFwCode() == null) {
       LOGGER.warn("Not having enough data to calculate milestones");
@@ -58,8 +59,11 @@ class MilestoneCalculatorImpl implements MilestoneCalculator {
         for (String gutcode : gutCodes) {
           calculateForSpecificGutCode(culModel, gutcode);
         }
+      } else {
+        LOGGER.info("Gut codes empty or null for CulModel: '{}'", culModel.toString());
       }
     }
+    LOGGER.info("Done processing, returning '{}' lessons in milestones", milestones.size());
     return milestones;
   }
 
@@ -70,7 +74,14 @@ class MilestoneCalculatorImpl implements MilestoneCalculator {
       gradeModel = gradeLookup.lookupUsingGradeId(gcmModel.getGradeId());
       if (gradeModel != null) {
         updateResultWithMilestoneLessonMapModel(culModel, gcmModel, gradeModel);
+      } else {
+        LOGGER.info(
+            "Not able to find gradeModel for gutCode: '{}' for culModel: '{}' for gradeId: '{}'",
+            gutcode, culModel.toString(), gcmModel.getGradeId());
       }
+    } else {
+      LOGGER.info("Not able to find gcmModel for gutCode: '{}' for culModel: '{}'", gutcode,
+          culModel.toString());
     }
   }
 

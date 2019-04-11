@@ -42,6 +42,7 @@ public class MilestoneQueueProcessor implements AsyncMessageProcessor {
         this.eventBusMessage = EventBusMessage.eventBusMessageBuilder(message);
         MilestoneQueueCommand command = MilestoneQueueCommand
             .build(eventBusMessage);
+        LOGGER.debug("Processing for command: '{}'", command.toString());
         service.enqueue(command);
         future.complete(MessageResponseFactory.createOkayResponse(new JsonObject()));
       } catch (Throwable throwable) {
