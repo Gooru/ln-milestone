@@ -11,7 +11,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
  * @author ashish.
  */
 
-public interface GcmInitializerDao {
+interface GcmInitializerDao {
 
   @Mapper(GradeCompetencyMapModelMapper.class)
   @SqlQuery(
