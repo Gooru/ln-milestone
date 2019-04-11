@@ -23,16 +23,10 @@ import org.gooru.milestone.infra.services.validators.ContextValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// @formatter:off
 /**
- *
- * - Start
- *
- * - End
  *
  * @author ashish.
  */
-// @formatter:on
 
 class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
 
@@ -55,6 +49,7 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   @Override
   public void processQueueRecord(MilestoneQueueModel model) {
     this.model = model;
+    LOGGER.info("Processing for model: '{}", model.toJson());
     if (!ProcessingEligibilityVerifier.build(dbiRegistry.getNucleusDbi(), model.getOverride())
         .isEligibleForProcessing(model)) {
       LOGGER.debug("Record is not found to be in dispatched state, may be processed already.");
@@ -88,11 +83,17 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   }
 
   private void process() {
+    LOGGER.debug("Doing initialize of CUL models in process");
     initializeCulModels();
+    LOGGER.debug("Doing initialize of GCM models in process");
     initializeGCM();
+    LOGGER.debug("Doing initialize of Grade models in process");
     initializeGrades();
+    LOGGER.debug("Doing initialize of Lookups in process");
     initializeLookups();
+    LOGGER.debug("Doing creation of Milestones in process");
     createMilestones();
+    LOGGER.debug("Persisting of Milestone models in process");
     persistMilestones();
   }
 
@@ -130,13 +131,17 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
 
 
   private void preprocess() {
+    LOGGER.debug("Doing initialize in pre-process");
     initialize();
+    LOGGER.debug("Doing validate in pre-process");
     validate();
+    LOGGER.debug("Doing handleOverride in pre-process");
     handleOverride();
   }
 
   private void handleOverride() {
     if (model.getOverride()) {
+      LOGGER.debug("Override is set, will clean up main table");
       MilestoneCleaner.build(dbiRegistry).cleanupMilestones(model.getCourseId(), model.getFwCode());
     }
   }
@@ -156,6 +161,7 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   private void initializeSubject() {
     String subject = SubjectInferer.build(dbiRegistry.getNucleusDbi())
         .inferSubjectForCourse(context.getCourseId());
+    LOGGER.info("Found subject: '{}' for course : '{}", subject, context.getCourseId());
     context.setSubject(subject);
   }
 

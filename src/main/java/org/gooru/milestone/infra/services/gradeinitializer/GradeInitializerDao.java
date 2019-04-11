@@ -11,7 +11,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
  * @author ashish.
  */
 
-public interface GradeInitializerDao {
+interface GradeInitializerDao {
 
 
   @Mapper(GradeModelMapper.class)

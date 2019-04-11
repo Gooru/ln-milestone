@@ -42,6 +42,7 @@ public class MilestoneStatusCheckerProcessor implements AsyncMessageProcessor {
         this.eventBusMessage = EventBusMessage.eventBusMessageBuilder(message);
         MilestoneStatusCheckerCommand command = MilestoneStatusCheckerCommand
             .build(eventBusMessage);
+        LOGGER.debug("Processing for command: '{}", command.toString());
         boolean milestoneDone = service.checkStatusForMilestoneDone(command);
         future.complete(MessageResponseFactory
             .createOkayResponse(new JsonObject().put("milestoneDone", milestoneDone)));
