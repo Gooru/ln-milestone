@@ -45,6 +45,11 @@ public final class AppConfiguration implements Initializer {
     return configuration.getString("rescope.applicable.course.version");
   }
 
+  public boolean shouldReadGutCodesColumnForLessonGutCodes() {
+    Boolean result = configuration.getBoolean("lesson.gutcodes.from.gutcodes.column");
+    return result == null ? false : result;
+  }
+
   public int getConfigAsInt(String key) {
     return configuration.getInteger(key);
   }

@@ -69,6 +69,7 @@
   },
   "app.configuration": {
     "context.mbus.timeout.seconds": 60,
+    "lesson.gutcodes.from.gutcodes.column": false,
     "rescope.applicable.course.version": "premium"
   },
   "vertxOptions": {
