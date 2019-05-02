@@ -12,6 +12,7 @@ public class GradeCompetencyMapModel {
   private String fwCode;
   private Long domainId;
   private String domainCode;
+  private String domainName;
   private int domainSequence;
   private String compCode;
   private String compName;
@@ -70,6 +71,14 @@ public class GradeCompetencyMapModel {
     return domainSequence;
   }
 
+  public String getDomainName() {
+    return domainName;
+  }
+
+  public void setDomainName(String domainName) {
+    this.domainName = domainName;
+  }
+
   public void setDomainSequence(int domainSequence) {
     this.domainSequence = domainSequence;
   }
@@ -115,6 +124,7 @@ public class GradeCompetencyMapModel {
         ", fwCode='" + fwCode + '\'' +
         ", domainId=" + domainId +
         ", domainCode='" + domainCode + '\'' +
+        ", domainName=" + domainName +
         ", domainSequence=" + domainSequence +
         ", compCode='" + compCode + '\'' +
         ", compName='" + compName + '\'' +

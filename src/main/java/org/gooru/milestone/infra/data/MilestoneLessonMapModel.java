@@ -21,6 +21,7 @@ public class MilestoneLessonMapModel {
   private Long domainId;
   private int domainSeq;
   private String domainCode;
+  private String domainName;
   private String compCode;
   private String compName;
   private String compStudentDesc;
@@ -118,6 +119,14 @@ public class MilestoneLessonMapModel {
     return domainSeq;
   }
 
+  public String getDomainName() {
+    return domainName;
+  }
+
+  public void setDomainName(String domainName) {
+    this.domainName = domainName;
+  }
+
   public void setDomainSeq(int domainSeq) {
     this.domainSeq = domainSeq;
   }
@@ -176,6 +185,7 @@ public class MilestoneLessonMapModel {
         ", fwCode='" + fwCode + '\'' +
         ", subjectCode='" + subjectCode + '\'' +
         ", domainId=" + domainId +
+        ", domainName=" + domainName +
         ", domainSeq=" + domainSeq +
         ", domainCode='" + domainCode + '\'' +
         ", compCode='" + compCode + '\'' +

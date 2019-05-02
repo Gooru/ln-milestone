@@ -25,6 +25,7 @@ public class MilestoneLessonMapModelMapper implements ResultSetMapper<MilestoneL
   private static final String TX_DOMAIN_ID = "tx_domain_id";
   private static final String TX_DOMAIN_SEQ = "tx_domain_seq";
   private static final String TX_DOMAIN_CODE = "tx_domain_code";
+  private static final String TX_DOMAIN_NAME = "tx_domain_name";
   private static final String TX_COMP_CODE = "tx_comp_code";
   private static final String TX_COMP_NAME = "tx_comp_name";
   private static final String TX_COMP_STUDENT_DESC = "tx_comp_student_desc";
@@ -48,6 +49,7 @@ public class MilestoneLessonMapModelMapper implements ResultSetMapper<MilestoneL
     model.setSubjectCode(r.getString(TX_SUBJECT_CODE));
     model.setDomainCode(r.getString(TX_DOMAIN_CODE));
     model.setDomainId(r.getLong(TX_DOMAIN_ID));
+    model.setDomainName(r.getString(TX_DOMAIN_NAME));
     model.setDomainSeq(r.getInt(TX_DOMAIN_SEQ));
     model.setCompCode(r.getString(TX_COMP_CODE));
     model.setCompName(r.getString(TX_COMP_NAME));
