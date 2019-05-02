@@ -101,6 +101,7 @@ class MilestoneCalculatorImpl implements MilestoneCalculator {
     result.setCompSeq(gcmModel.getCompSequence());
     result.setDomainId(gcmModel.getDomainId());
     result.setDomainCode(gcmModel.getDomainCode());
+    result.setDomainName(gcmModel.getDomainName());
     result.setDomainSeq(gcmModel.getDomainSequence());
     result.setFwCode(gcmModel.getFwCode());
     result.setSubjectCode(gcmModel.getSubjectCode());

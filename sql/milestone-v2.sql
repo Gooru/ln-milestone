@@ -1,6 +1,6 @@
 
 -- Nucleus DB
-ALTER TABLE milestone_lesson_map add column tx_domain_name text;
+ALTER TABLE milestone_lesson_map add column tx_domain_name text NOT NULL;
 
 -- DSDB
 ALTER TABLE grade_competency_map add column tx_domain_name text;
