@@ -19,6 +19,15 @@ interface CulModelsInitializerDao {
       "select l.course_id, u.unit_id, u.sequence_id unit_sequence, l.lesson_id, l.sequence_id lesson_sequence, "
           + " l.gut_codes from lesson l inner join unit u on l.unit_id = u.unit_id and l.course_id = u.course_id "
           + " where l.course_id = :courseId and l.is_deleted = false order by u.sequence_id, l.sequence_id")
-  List<CulModel> fetchCulModelsForCourse(@Bind("courseId") UUID courseId);
+  List<CulModel> fetchCulModelsForCourseWithGutCodesColumn(@Bind("courseId") UUID courseId);
+
+  @Mapper(CulModelMapper.class)
+  @SqlQuery(
+      "select l.course_id, u.unit_id, u.sequence_id unit_sequence, l.lesson_id, l.sequence_id lesson_sequence, "
+          + " (ARRAY(select jsonb_object_keys(l.aggregated_gut_codes))) gut_codes from lesson l "
+          + " inner join unit u on l.unit_id = u.unit_id and l.course_id = u.course_id "
+          + " where l.course_id = :courseId and l.is_deleted = false order by u.sequence_id, l.sequence_id")
+  List<CulModel> fetchCulModelsForCourseWithAggregatedGutCodesColumn(
+      @Bind("courseId") UUID courseId);
 
 }

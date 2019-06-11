@@ -19,10 +19,10 @@ interface MilestonePersisterCoreDao {
 
   @SqlBatch("insert into milestone_lesson_map "
       + " (milestone_id, course_id, unit_id, lesson_id, grade_id, grade_name, grade_seq, fw_code, "
-      + " tx_subject_code, tx_domain_id, tx_domain_seq, tx_domain_code, tx_comp_code, tx_comp_name, "
-      + " tx_comp_student_desc, tx_comp_seq) values (:milestoneId, :courseId, :unitId, :lessonId, "
-      + " :gradeId, :gradeName, :gradeSeq, :fwCode, :subjectCode, :domainId, :domainSeq, "
-      + " :domainCode, :compCode, :compName, :compStudentDesc, :compSeq)")
+      + " tx_subject_code, tx_domain_id, tx_domain_name, tx_domain_seq, tx_domain_code, tx_comp_code, "
+      + " tx_comp_name,  tx_comp_student_desc, tx_comp_seq) values (:milestoneId, :courseId, :unitId, "
+      + " :lessonId,  :gradeId, :gradeName, :gradeSeq, :fwCode, :subjectCode, :domainId, :domainName, "
+      + " :domainSeq,  :domainCode, :compCode, :compName, :compStudentDesc, :compSeq)")
   void persistMilestones(@BindBean List<MilestoneLessonMapModel> models);
 
   @Mapper(MilestoneAnalyticsModelMapper.class)
